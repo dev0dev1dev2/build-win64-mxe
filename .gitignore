@@ -4,3 +4,12 @@ mxe
 vips-dev-*
 vips-pdb-*
 .update-timestamp
+build/LD_LIBRARY_PATH.txt
+build/modulespath.txt
+build/nvaccelinfo.txt
+build/nvc.txt
+build/nvc++.txt
+build/nvcc.txt
+build/output.txt
+build/PATH.txt
+build/smi.txt

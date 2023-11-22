@@ -191,6 +191,8 @@ $oci_runtime run --rm -t \
   -u $(id -u):$(id -g) \
   -v $PWD/build:/data \
   -v $tmpdir:/var/tmp:z \
+  -v /usr/lib/wsl:/usr/lib/wsl \
+  --device=/dev/dxg \
   -e "GIT_COMMIT=$git_commit" \
   -e "FFI_COMPAT=$with_ffi_compat" \
   -e "HEVC=$with_hevc" \
@@ -198,6 +200,7 @@ $oci_runtime run --rm -t \
   -e "LLVM=$with_llvm" \
   -e "MOZJPEG=$with_mozjpeg" \
   -e "ZLIB_NG=$with_zlib_ng" \
+  --gpus all \
   libvips-build-win-mxe \
   $deps \
   $target

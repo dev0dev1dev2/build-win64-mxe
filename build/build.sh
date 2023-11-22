@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # exit on error
-set -e
+# set -e
 
 if [[ "$*" == *--help* ]]; then
   cat <<EOF
@@ -39,6 +39,24 @@ EOF
 fi
 
 . variables.sh
+
+cat /etc/environment-modules/modulespath > /data/output.txt
+
+. /etc/profile.d/modules.sh 
+module avail 
+module load nvhpc/23.11 
+export PATH="/usr/lib/wsl/lib:$PATH"
+export LD_LIBRARY_PATH="/usr/lib/wsl/lib:$LD_LIBRARY_PATH"
+
+cat /etc/environment-modules/modulespath > modulespath.txt 
+ls /usr/lib/wsl/lib > output.txt
+echo $PATH > PATH.txt
+echo $LD_LIBRARY_PATH > LD_LIBRARY_PATH.txt
+nvc --version 2>&1 | tee nvc.txt
+nvcc --version 2>&1 | tee nvcc.txt
+nvc++ --version 2>&1 | tee nvc++.txt
+nvaccelinfo -v 2>&1 | tee nvaccelinfo.txt 
+nvidia-smi > smi.txt
 
 deps="${1:-web}"
 target="${2:-x86_64-w64-mingw32.shared.win32}"
@@ -123,6 +141,8 @@ fi
 # https://github.com/libvips/libvips/issues/1637
 plugins+=" $work_dir/plugins/proxy-libintl"
 
+echo "end plugins"
+
 # Build pe-util, handy for copying DLL dependencies.
 make pe-util \
   IGNORE_SETTINGS=yes \
@@ -134,6 +154,7 @@ if [ -n "$GIT_COMMIT" ]; then
   # Invalidate build cache, if exists
   rm -f $mxe_dir/usr/$target.$deps/installed/vips-$deps
 fi
+echo "end pe-util "
 
 # Build gendef (a tool for generating def files from DLLs) 
 # and libvips (+ dependencies)
@@ -141,6 +162,7 @@ make gendef vips-$deps \
   MXE_PLUGIN_DIRS="$plugins" \
   MXE_TARGETS=$target.$deps \
   GIT_COMMIT=$GIT_COMMIT
+echo "end gendef"
 
 # Build and bundle llvm-mingw tests when debugging
 if [ "$LLVM" = "true" ] && [ "$DEBUG" = "true" ]; then
@@ -151,5 +173,11 @@ fi
 
 cd $work_dir
 
-# Packaging
+# # Packaging
 . $work_dir/package-vipsdev.sh $deps $target
+echo "end Packaging"
+
+echo "------------"
+cat /data/mxe/usr/x86_64-w64-mingw32.shared.win32.all/share/meson/mxe-crossfile.meson
+echo "------------"
+cat  /var/tmp/tmp-vips-all-x86_64-w64-mingw32.shared.win32.all/libvips-libvips-442a5c7.build_/meson-logs/meson-log.txt

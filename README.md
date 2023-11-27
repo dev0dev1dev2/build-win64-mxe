@@ -1,5 +1,9 @@
 # build-win64-mxe
 
+```sh
+./build.sh --without-llvm --commit 442a5c7e63f8c7e00378584ae46cfc8775d39a17 all
+```
+
 libvips and its dependencies cross-compiled for all four Windows architectures (`x86_64`, `i686`,
 `aarch64` and `armv7`).
 

@@ -40,23 +40,21 @@ fi
 
 . variables.sh
 
-cat /etc/environment-modules/modulespath > /data/output.txt
-
 . /etc/profile.d/modules.sh 
 module avail 
 module load nvhpc/23.11 
 export PATH="/usr/lib/wsl/lib:$PATH"
 export LD_LIBRARY_PATH="/usr/lib/wsl/lib:$LD_LIBRARY_PATH"
 
-cat /etc/environment-modules/modulespath > modulespath.txt 
-ls /usr/lib/wsl/lib > output.txt
-echo $PATH > PATH.txt
-echo $LD_LIBRARY_PATH > LD_LIBRARY_PATH.txt
-nvc --version 2>&1 | tee nvc.txt
-nvcc --version 2>&1 | tee nvcc.txt
-nvc++ --version 2>&1 | tee nvc++.txt
-nvaccelinfo -v 2>&1 | tee nvaccelinfo.txt 
-nvidia-smi > smi.txt
+cat /etc/environment-modules/modulespath > _modulespath.txt 
+ls /usr/lib/wsl/lib > _output.txt
+echo $PATH > _PATH.txt
+echo $LD_LIBRARY_PATH > _LD_LIBRARY_PATH.txt
+nvc --version 2>&1 | tee _nvc.txt
+nvcc --version 2>&1 | tee _nvcc.txt
+nvc++ --version 2>&1 | tee _nvc++.txt
+nvaccelinfo -v 2>&1 | tee _nvaccelinfo.txt 
+nvidia-smi > _smi.txt
 
 deps="${1:-web}"
 target="${2:-x86_64-w64-mingw32.shared.win32}"
